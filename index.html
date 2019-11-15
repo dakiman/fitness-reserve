@@ -1,0 +1,246 @@
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    <meta http-equiv='x-ua-compatible' content='ie=edge'>
+    <!-- IMPORTANT: No CSS link needed as of v1 Beta (@next) - It's all inlined -->
+    <!-- Pre v1.0.0 versions need the minified css -->
+    <!-- <link rel='stylesheet' href='https://unpkg.com/v-calendar/lib/v-calendar.min.css'> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+</head>
+
+<body>
+    <div id='app'>
+        <!-- <v-date-picker mode="range" :value="null" color="purple" is-dark is-inline /> -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="">
+                        <img src="https://www.logogarden.com/wp-content/uploads/lg-logo-samples/Sports-Fitness-Logo-7.png"
+                            alt="Logo">
+                    </a>
+                    <span class="navbar-burger burger" data-target="navbarMenu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+                <div id="navbarMenu" class="navbar-menu">
+                    <div class="navbar-end">
+                        <a class="navbar-item is-active">Home</a>
+                        <a class="navbar-item">Examples</a>
+                        <a class="navbar-item">Features</a>
+                        <a class="navbar-item">Team</a>
+                        <a class="navbar-item">Archives</a>
+                        <a class="navbar-item">Help</a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">Account</a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item">Dashboard</a>
+                                <a class="navbar-item">Profile</a>
+                                <a class="navbar-item">Settings</a>
+                                <hr class="navbar-divider">
+                                <div class="navbar-item">Logout</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- END NAV -->
+        <section class="hero is-fullheight">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <div class="columns is-8 is-variable ">
+                        <div class="column is-two-thirds has-text-left">
+                            <h1 class="title is-1">Make your appointment</h1>
+                            <p class="is-size-4">Pick your type of training and the available coaches will be displayed.
+                                Adding a date further filters the available coaches.</p>
+                            <div class="social-media" style="margin: 10px 2px 10px 2px">
+                                <a class="button is-light is-large"
+                                    :class="this.areaFilter == 'all' ? 'is-primary' : ''" 
+                                    style="margin: 3px;"
+                                    @click="filter('all')">
+                                    <i class="fas fa-bullseye fa-2x"></i>
+                                </a>
+                                <a class="button is-light is-large"
+                                    :class="this.areaFilter == 'weight' ? 'is-primary' : ''" 
+                                    style="margin: 3px;"
+                                    @click="filter('weight')">
+                                    <i class="fas fa-dumbbell fa-2x"></i>
+                                </a>
+                                <a class="button is-light is-large"
+                                    :class="this.areaFilter == 'fitness' ? 'is-primary' : ''" 
+                                    style="margin: 3px;"
+                                    @click="filter('fitness')">
+                                    <i class="fas fa-weight fa-2x"></i>
+                                </a>
+                                </a>
+                                <a class="button is-light is-large"
+                                    :class="this.areaFilter == 'cardio' ? 'is-primary' : ''" 
+                                    style="margin: 3px;"
+                                    @click="filter('cardio')">
+                                    <i class="fas fa-heartbeat fa-2x"></i>
+                                </a>
+                            </div>
+                            <div class="box" v-for="coach in displayedCoaches">
+                                <article class="media">
+                                    <div class="media-left">
+                                        <figure class="image is-64x64">
+                                            <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                                        </figure>
+                                    </div>
+                                    <div class="media-content">
+                                        <div class="content">
+                                            <p>
+                                                <strong>{{coach.name}}</strong>
+                                                <small>{{coach.areas.join(', ')}}</small> / <small>{{ coach.age }},
+                                                    {{ coach.gender == 'M' ? 'Male' : 'Female' }}</small>
+                                                <br>
+                                                {{coach.description}}
+                                            </p>
+                                        </div>
+                                        <nav class="level is-mobile">
+                                            <div class="level-left">
+                                                <a class="level-item" aria-label="reply">
+                                                    <span class="icon is-small">
+                                                        <i class="fas fa-reply" aria-hidden="true"></i>
+                                                    </span>
+                                                </a>
+                                                <a class="level-item" aria-label="retweet">
+                                                    <span class="icon is-small">
+                                                        <i class="fas fa-retweet" aria-hidden="true"></i>
+                                                    </span>
+                                                </a>
+                                                <a class="level-item" aria-label="like">
+                                                    <span class="icon is-small">
+                                                        <i class="fas fa-heart" aria-hidden="true"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="column is-one-third has-text-left">
+                            <div class="field">
+                                <label class="label">Name</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    <input class="input is-small" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Message</label>
+                                <div class="control">
+                                    <textarea class="textarea is-small"></textarea>
+                                </div>
+                            </div>
+                            <div v-if="selectedDate != null">
+                                You are viewing availability for: {{this.selectedDate}}
+                            </div>
+                            <div class="control" style="margin: 10px 0 10px 0;">
+                                <v-date-picker mode="single" :value="null" color="purple" is-dark is-inline is-expanded
+                                    v-model="selectedDate" />
+                            </div>
+                            <div class="control">
+                                <button type="submit"
+                                    class="button is-link is-fullwidth has-text-weight-medium is-medium"
+                                    @click="logDate">Send
+                                    Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src='https://unpkg.com/vue/dist/vue.js'></script>
+    <script src='https://unpkg.com/v-calendar@next'></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                selectedDate: null,
+                displayedCoaches: [],
+                areaFilter: 'all',
+                coaches: [
+                    {
+                        name: "Testy McTestful",
+                        age: 31,
+                        gender: "M",
+                        areas: ["weight", "fitness", "cardio"],
+                        description: "Does everything"
+                    },
+                    {
+                        name: "Big Boy Weights Only",
+                        age: 48,
+                        gender: "M",
+                        areas: ["weight"],
+                        description: "Only weight workouts, very strong"
+                    },
+                    {
+                        name: "Runner girl",
+                        age: 23,
+                        gender: "F",
+                        areas: ["fitness", "cardio"],
+                        description: "Fitness and cardio boy"
+                    },
+                    {
+                        name: "Cardio Master",
+                        age: 29,
+                        gender: "M",
+                        areas: ["cardio"],
+                        description: "Cardio only boy"
+                    },
+                    {
+                        name: "Fitness Master",
+                        age: 35,
+                        gender: "F",
+                        areas: ["fitness"],
+                        description: "Big girl"
+                    },
+                ]
+            },
+            mounted() {
+                this.displayedCoaches = this.coaches;
+            },
+            methods: {
+                logDate() {
+                    console.log(this.selectedDate);
+                },
+                filter(area) {
+                    if (area == 'all') {
+                        this.displayedCoaches = this.coaches;
+                        this.areaFilter = 'all';
+                    }
+                    if (area == 'weight') {
+                        this.displayedCoaches = this.coaches.filter(coach => { return coach.areas.includes('weight') });
+                        this.areaFilter = 'weight';
+                    }
+                    if (area == 'fitness') {
+                        this.displayedCoaches = this.coaches.filter(coach => { return coach.areas.includes('fitness') });
+                        this.areaFilter = 'fitness';
+                    }
+                    if (area == 'cardio') {
+                        this.displayedCoaches = this.coaches.filter(coach => { return coach.areas.includes('cardio') });
+                        this.areaFilter = 'cardio';
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
