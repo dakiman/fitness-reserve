@@ -59,27 +59,23 @@
                                 Adding a date further filters the available coaches.</p>
                             <div class="social-media" style="margin: 10px 2px 10px 2px">
                                 <a class="button is-light is-large"
-                                    :class="this.areaFilter == 'all' ? 'is-primary' : ''" 
-                                    style="margin: 3px;"
+                                    :class="this.areaFilter == 'all' ? 'is-primary' : ''" style="margin: 3px;"
                                     @click="filter('all')">
                                     <i class="fas fa-bullseye fa-2x"></i>
                                 </a>
                                 <a class="button is-light is-large"
-                                    :class="this.areaFilter == 'weight' ? 'is-primary' : ''" 
-                                    style="margin: 3px;"
+                                    :class="this.areaFilter == 'weight' ? 'is-primary' : ''" style="margin: 3px;"
                                     @click="filter('weight')">
                                     <i class="fas fa-dumbbell fa-2x"></i>
                                 </a>
                                 <a class="button is-light is-large"
-                                    :class="this.areaFilter == 'fitness' ? 'is-primary' : ''" 
-                                    style="margin: 3px;"
+                                    :class="this.areaFilter == 'fitness' ? 'is-primary' : ''" style="margin: 3px;"
                                     @click="filter('fitness')">
                                     <i class="fas fa-weight fa-2x"></i>
                                 </a>
                                 </a>
                                 <a class="button is-light is-large"
-                                    :class="this.areaFilter == 'cardio' ? 'is-primary' : ''" 
-                                    style="margin: 3px;"
+                                    :class="this.areaFilter == 'cardio' ? 'is-primary' : ''" style="margin: 3px;"
                                     @click="filter('cardio')">
                                     <i class="fas fa-heartbeat fa-2x"></i>
                                 </a>
@@ -95,13 +91,19 @@
                                         <div class="content">
                                             <p>
                                                 <strong>{{coach.name}}</strong>
-                                                <small>{{coach.areas.join(', ')}}</small> / <small>{{ coach.age }},
+                                                <small>{{coach.areas.join(', ')}}</small> /
+                                                <small>{{ coach.age }},
                                                     {{ coach.gender == 'M' ? 'Male' : 'Female' }}</small>
+                                                <a class="is-pulled-right button" @click="selectCoach(coach)"
+                                                    :class="coachIsSelected(coach) ? 'is-primary' : ''">
+                                                    <i class="far fa-check-square fa-2x"></i>
+                                                </a>
                                                 <br>
                                                 {{coach.description}}
                                             </p>
+
                                         </div>
-                                        <nav class="level is-mobile">
+                                        <!-- <nav class="level is-mobile">
                                             <div class="level-left">
                                                 <a class="level-item" aria-label="reply">
                                                     <span class="icon is-small">
@@ -119,7 +121,7 @@
                                                     </span>
                                                 </a>
                                             </div>
-                                        </nav>
+                                        </nav> -->
                                     </div>
                                 </article>
                             </div>
@@ -144,7 +146,16 @@
                                 </div>
                             </div>
                             <div v-if="selectedDate != null">
-                                You are viewing availability for: {{this.selectedDate}}
+                                <label class="label">Date</label>
+                                <div class="control">
+                                    <input class="input is-medium" type="text" :value="formattedDate" disabled>
+                                </div>
+                            </div>
+                            <div v-if="selectedCoach != null">
+                                <label class="label">Your coach</label>
+                                <div class="control">
+                                    <input class="input is-medium" type="text" :value="selectedCoach.name " disabled>
+                                </div>
                             </div>
                             <div class="control" style="margin: 10px 0 10px 0;">
                                 <v-date-picker mode="single" :value="null" color="purple" is-dark is-inline is-expanded
@@ -174,6 +185,7 @@
             data: {
                 selectedDate: null,
                 displayedCoaches: [],
+                selectedCoach: null,
                 areaFilter: 'all',
                 coaches: [
                     {
@@ -216,9 +228,22 @@
             mounted() {
                 this.displayedCoaches = this.coaches;
             },
+            computed: {
+                formattedDate() {
+                    return this.selectedDate.toDateString();
+                }
+            },
             methods: {
                 logDate() {
                     console.log(this.selectedDate);
+                },
+                selectCoach(coach) {
+                    this.selectedCoach = coach
+                },
+                coachIsSelected(coach) {
+                    if (this.selectedCoach != null && coach.name == this.selectedCoach.name)
+                        return true;
+                    return false;
                 },
                 filter(area) {
                     if (area == 'all') {
